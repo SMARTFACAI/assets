@@ -1,0 +1,45 @@
+Для задач классификации с учителем.
+
+import pandas 
+import matplotlib.pyplot
+
+
+x = pandas.read_csv(путь к таблице) - объекты
+y = pandas.read_csv(путь к таблице) - исходы
+
+x.head() - просмотр таблицы х
+y.head() - просмотр таблицы у
+
+table[new_feature] = table[feature] + - / * table[feature1] - создаем новые признаки, анализируя данные
+name = table.query(Ваши фильтры) - задаем в name строки, фильтруем
+
+count = [i for i in x.columns if 'feature' in i] - запишем в переменную названия столбцов, где присутствует слово feature. Пример: 'feature_col', 'col_feature' - они будут записаны
+x.drop(count, axis = 1, inplace = True] - удалим столбы count
+x.drop(['other'], axis = 1, inplace = True) - удалим определенный столбец 'other'
+------------------------
+Теперь разобьем таблицы на обучающую и валидационную выборки для определения точности модели в будущем
+
+from sklearn.model_selection import train_test_split 
+x_train, x_validation, y_train, y_validation = train_test_split(x, y, test_size=.33, random_state=1)
+
+------------------------
+from sklearn.ensemble import GradientBoostingClassifier - алгоритм градиентного бустинга
+from sklearn.ensemble import RandomForestClassifier - алгоритм случайного леса
+from sklearn.naive_bayes import GaussianNB - гауссовский алгоритм
+
+model = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=322) - обучаем модель с параметрами: 100 деревьев глубиной 5
+model.fit(x_train, y_train) - приступаем к обучению модели на обучающей выборке после разбиения train_test_split
+
+model_1 = GradientBoostingClassifier(n_estimators=30, max_depth=4, random_state=322) - обучаем модель с параметрами: 30 деревьев глубиной 4
+model_1.fit(x_train, y_train) - приступаем к обучению модели на обучающей выборке после разбиения train_test_split
+
+model_2 = GaussianNB() - так же можно задавать алгоритм без параметров, тогда будут применяться дефолтные значения, установленные разработчиками
+model_2.fit(x_train, y_train) - приступаем к обучению модели на обучающей выборке после разбиения train_test_split
+------------------------
+Проверяем точность нашей модели 
+
+from sklearn.metrics import accuracy_score
+
+print('Train Accuracy:', accuracy_score(y_train, model.predict(x_train))) - требуется менять переменную model, чтобы подсчитать точность другой модели, к примеру, model_2
+print('Validation Accuracy:', accuracy_score(y_validation, model.predict(x_validation))) - тут тоже нужно поменять
+
